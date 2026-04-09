@@ -10,10 +10,10 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --brand:        #1D6EF5;
-  --brand-dark:   #1558CC;
+  --brand:        #4589F5;
+  --brand-dark:   #2D6FE0;
   --brand-light:  #EBF3FF;
-  --brand-border: rgba(29,110,245,0.2);
+  --brand-border: rgba(69,137,245,0.22);
 
   --nav-bg: #FFFFFF;
 
@@ -24,7 +24,7 @@
   --border:   #DDE0ED;
   --border2:  #C8CBDB;
 
-  --text:   #2E3940;
+  --text:   #2E3A4A;
   --text2:  #4A5568;
   --muted:  #6E7881;
   --muted2: #9BAAB8;
@@ -65,7 +65,7 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 .page-crumb { font-size:12px; color:var(--muted); }
 
 .tb-badge { display:flex; align-items:center; gap:5px; border-radius:20px; padding:4px 10px; font-family:var(--mono); font-size:9px; letter-spacing:0.05em; border:1px solid; }
-.tb-live { background:rgba(29,110,245,0.08); border-color:rgba(29,110,245,0.25); color:var(--brand); }
+.tb-live { background:rgba(69,137,245,0.08); border-color:rgba(69,137,245,0.25); color:var(--brand); }
 .tb-live .dot { width:5px; height:5px; border-radius:50%; background:var(--brand); animation:pulse 2s ease-in-out infinite; }
 .tb-demo { background:var(--green-bg); border-color:var(--green-border); color:var(--green); }
 .tb-demo .dot { width:5px; height:5px; border-radius:50%; background:var(--green); animation:pulse 2.5s ease-in-out infinite; }
@@ -319,14 +319,12 @@ kbd { background:var(--surface); border:1px solid var(--border2); border-radius:
   <div class="topbar-left">
     <div class="logo-wrap">
       <div class="logo-mark">
-        <!-- Sitemate diamond mark -->
-        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- left/dark facet -->
-          <path d="M20 4 L4 20 L20 36 L20 22 L10 20 L20 4Z" fill="#1D6EF5"/>
-          <!-- right/light facet -->
-          <path d="M20 4 L36 20 L20 36 L20 22 L30 20 L20 4Z" fill="#5A9BF8"/>
-          <!-- top inner highlight -->
-          <path d="M20 4 L30 20 L20 22 L10 20 Z" fill="#3A82F6"/>
+        <!-- Sitemate S mark — two rounded pieces -->
+        <svg viewBox="0 0 44 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- top-right piece -->
+          <rect x="4" y="3" width="37" height="21" rx="10.5" fill="#4589F5" transform="rotate(-32 22.5 13.5)"/>
+          <!-- bottom-left piece -->
+          <rect x="3" y="26" width="37" height="21" rx="10.5" fill="#4589F5" transform="rotate(-32 21.5 36.5)"/>
         </svg>
       </div>
       <span class="logo-name">Sitemate</span>
