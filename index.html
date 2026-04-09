@@ -281,6 +281,39 @@ kbd { background:var(--surface); border:1px solid var(--border2); border-radius:
 
 @keyframes dots { 0%{content:''} 33%{content:'.'} 66%{content:'..'} 100%{content:'...'} }
 .dots::after { content:''; animation:dots 1.2s steps(1) infinite; }
+
+/* ── RFP Log Modal ── */
+.log-entry-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px 12px; margin-bottom:10px; box-shadow:var(--shadow-sm); transition:box-shadow 0.15s; }
+.log-entry-card:hover { box-shadow:var(--shadow-md); }
+.log-entry-card:last-child { margin-bottom:0; }
+.log-entry-top   { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.log-entry-left  { flex:1; min-width:0; }
+.log-entry-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
+.log-entry-company { font-size:13px; font-weight:600; color:var(--text); }
+.log-entry-date    { font-size:11px; color:var(--muted); margin-top:2px; }
+.log-score         { font-size:20px; font-weight:700; color:var(--text); letter-spacing:-0.03em; line-height:1; }
+.log-entry-stats   { margin-top:6px; }
+.log-stat-chips    { display:flex; align-items:center; gap:5px; margin-top:4px; }
+
+/* ── Themes tab ── */
+.themes-stats-strip { display:grid; grid-template-columns:80px 80px 1fr; gap:14px; background:var(--brand-light); border:1px solid var(--brand-border); border-radius:var(--radius); padding:14px 18px; margin-bottom:20px; }
+.themes-stat   { display:flex; flex-direction:column; gap:3px; }
+.themes-stat-n { font-size:18px; font-weight:700; color:var(--text); letter-spacing:-0.02em; line-height:1.1; }
+.themes-stat-l { font-size:11px; color:var(--muted); }
+.themes-stat-warn .themes-stat-n { font-size:13px; color:var(--red); }
+.themes-section       { margin-bottom:22px; }
+.themes-section-title { font-size:11px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.themes-cat-header { display:grid; grid-template-columns:160px 1fr 36px 60px; gap:10px; align-items:center; font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; padding-bottom:5px; border-bottom:1px solid var(--border); margin-bottom:4px; }
+.themes-cat-row    { display:grid; grid-template-columns:160px 1fr 36px 60px; gap:10px; align-items:center; padding:5px 0; border-bottom:1px solid var(--surface); }
+.themes-cat-row:last-child { border-bottom:none; }
+.themes-cat-name   { font-size:12px; color:var(--text2); font-weight:500; }
+.themes-cat-count  { font-size:11px; color:var(--muted); text-align:right; }
+.themes-cat-rate   { font-size:12px; font-weight:600; text-align:right; }
+.themes-esc-list   { display:flex; flex-direction:column; }
+.themes-esc-row    { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid var(--surface); }
+.themes-esc-row:last-child { border-bottom:none; }
+.themes-esc-q      { font-size:12px; color:var(--text); font-weight:500; line-height:1.45; }
+.themes-esc-cat    { font-size:11px; color:var(--muted); margin-top:2px; }
 </style>
 </head>
 <body>
@@ -313,6 +346,33 @@ kbd { background:var(--surface); border:1px solid var(--border2); border-radius:
   </div>
 </div>
 
+<!-- RFP Log Modal -->
+<div class="overlay" id="log-overlay" role="dialog" aria-modal="true">
+  <div class="modal modal-lg" style="width:780px">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">RFP Log</div>
+        <div class="modal-sub" id="log-modal-sub">All analysed RFPs · auto-saved</div>
+      </div>
+      <button class="modal-close" id="log-close">✕</button>
+    </div>
+    <div style="padding:0 24px;border-bottom:1px solid var(--border);background:var(--white);display:flex;align-items:center;gap:4px">
+      <button class="filter-tab active" id="log-tab-log"    style="margin:8px 0">Log</button>
+      <button class="filter-tab"        id="log-tab-themes" style="margin:8px 0">Themes &amp; Issues</button>
+    </div>
+    <div class="modal-body" id="log-modal-body"></div>
+    <div class="modal-foot">
+      <div class="modal-foot-left">
+        <button class="btn btn-danger btn-sm" id="log-clear-btn">⊗ Clear log</button>
+      </div>
+      <div class="modal-foot-right">
+        <button class="btn btn-ghost btn-sm" id="log-export-btn">↓ Export .md</button>
+        <button class="btn btn-ghost btn-sm" id="log-close2">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Topbar -->
 <header class="topbar">
   <div class="topbar-left">
@@ -323,6 +383,7 @@ kbd { background:var(--surface); border:1px solid var(--border2); border-radius:
     <span class="page-crumb">RFP Response Hub</span>
   </div>
   <div class="topbar-right">
+    <button class="btn btn-ghost btn-sm" id="log-btn" style="gap:6px">◷ RFP Log<span id="log-badge" style="display:none;background:var(--brand);color:#fff;border-radius:8px;padding:1px 6px;font-size:10px;font-weight:600;line-height:1.4">0</span></button>
     <div class="tb-badge tb-live"><div class="dot"></div>SOT live</div>
     <div class="tb-badge tb-demo"><div class="dot"></div>Demo mode</div>
   </div>
@@ -917,6 +978,9 @@ let lastResults = [];
 let lastDraft = '';
 let currentScenario = null;
 
+const LOG_KEY = 'sitemate_rfp_log';
+const LOG_MAX = 50;
+
 /* ════════════════════════════════════════════════
    ACCORDION
 ════════════════════════════════════════════════ */
@@ -1109,6 +1173,7 @@ function renderResults(result) {
   el.filterTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === 'all'));
 
   bindCopyBtns();
+  saveToLog(result);
 }
 
 /* ════════════════════════════════════════════════
@@ -1183,6 +1248,233 @@ async function generateDraft() {
 }
 
 /* ════════════════════════════════════════════════
+   RFP LOG
+════════════════════════════════════════════════ */
+function computeScore(reqs) {
+  const total    = reqs.length;
+  if (!total) return { score:0, covered:0, partial:0, escalate:0, total:0, riskLevel:'low' };
+  const covered  = reqs.filter(r => r.status === 'covered').length;
+  const partial  = reqs.filter(r => r.status === 'partial').length;
+  const escalate = reqs.filter(r => r.status === 'escalate').length;
+  const score    = Math.round(((covered + partial * 0.5) / total) * 100);
+  const riskLevel = escalate >= 3 || (escalate / total) >= 0.35 ? 'high'
+                  : escalate >= 1 ? 'medium' : 'low';
+  return { score, covered, partial, escalate, total, riskLevel };
+}
+
+function loadLog() {
+  try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); } catch { return []; }
+}
+
+function saveToLog(result) {
+  const reqs = result.requirements || [];
+  const { score, covered, partial, escalate, total, riskLevel } = computeScore(reqs);
+  const entry = {
+    id:       Date.now(),
+    savedAt:  new Date().toISOString(),
+    company:  result.company  || '',
+    deadline: result.deadline || '',
+    budget:   result.budget   || '',
+    scenario: currentScenario,
+    score, covered, partial, escalate, total, riskLevel,
+    requirements: reqs.map(r => ({
+      question:        r.question,
+      category:        r.category,
+      status:          r.status,
+      escalate_reason: r.escalate_reason || ''
+    }))
+  };
+  let log = loadLog();
+  log.unshift(entry);
+  if (log.length > LOG_MAX) log = log.slice(0, LOG_MAX);
+  try { localStorage.setItem(LOG_KEY, JSON.stringify(log)); } catch {}
+  updateLogBadge();
+}
+
+function updateLogBadge() {
+  const count = loadLog().length;
+  el.logBadge.textContent = count;
+  el.logBadge.style.display = count ? '' : 'none';
+}
+
+function computeThemes(log) {
+  const catMap = {};
+  for (const entry of log) {
+    for (const req of entry.requirements) {
+      if (!catMap[req.category]) catMap[req.category] = { total:0, covered:0, partial:0, escalate:0 };
+      catMap[req.category].total++;
+      catMap[req.category][req.status]++;
+    }
+  }
+  const categories = Object.entries(catMap).map(([name, s]) => ({
+    name,
+    total:    s.total,
+    covered:  s.covered,
+    partial:  s.partial,
+    escalate: s.escalate,
+    coverageRate: Math.round(((s.covered + s.partial * 0.5) / s.total) * 100)
+  })).sort((a, b) => b.total - a.total);
+
+  const escalateMap = {};
+  for (const entry of log) {
+    for (const req of entry.requirements) {
+      if (req.status !== 'escalate') continue;
+      const key = req.question.trim().toLowerCase();
+      if (!escalateMap[key]) escalateMap[key] = { question: req.question, count: 0, category: req.category };
+      escalateMap[key].count++;
+    }
+  }
+  const recurringEscalations = Object.values(escalateMap)
+    .filter(e => e.count >= 2)
+    .sort((a, b) => b.count - a.count);
+
+  const totalRFPs = log.length;
+  const avgScore  = totalRFPs ? Math.round(log.reduce((s, e) => s + e.score, 0) / totalRFPs) : 0;
+  const problematic = categories.filter(c => c.total >= 2).sort((a, b) => a.coverageRate - b.coverageRate)[0] || null;
+
+  return { categories, recurringEscalations, totalRFPs, avgScore, problematic };
+}
+
+function setLogTab(tab) {
+  el.logTabLog.classList.toggle('active', tab === 'log');
+  el.logTabThemes.classList.toggle('active', tab === 'themes');
+}
+
+function buildLogCard(entry) {
+  const date  = new Date(entry.savedAt);
+  const label = date.toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' })
+              + ' · ' + date.toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' });
+  const company   = escapeHTML(entry.company || 'Unknown company');
+  const riskClass = { low:'badge-g', medium:'badge-a', high:'badge-r' }[entry.riskLevel];
+  const riskText  = { low:'Low risk', medium:'Review', high:'High risk' }[entry.riskLevel];
+  const meta = [entry.deadline && `📅 ${escapeHTML(entry.deadline)}`, entry.budget && `💰 ${escapeHTML(entry.budget)}`]
+    .filter(Boolean).map(m => `<span class="meta-chip" style="font-size:11px">${m}</span>`).join('');
+  const metaHtml = meta ? `<div class="meta-strip" style="margin:5px 0 0">${meta}</div>` : '';
+  const pct = entry.total ? (entry.covered / entry.total * 100).toFixed(0) : 0;
+  return `<div class="log-entry-card">
+    <div class="log-entry-top">
+      <div class="log-entry-left">
+        <div class="log-entry-company">${company}</div>
+        <div class="log-entry-date">${label}</div>
+        ${metaHtml}
+      </div>
+      <div class="log-entry-right">
+        <span class="log-score">${entry.score}%</span>
+        <span class="req-badge ${riskClass}" style="font-size:10px">${riskText}</span>
+      </div>
+    </div>
+    <div class="log-entry-stats">
+      <div class="score-bar-track" style="height:4px;margin:8px 0 5px"><div class="score-bar-fill sbar-g" style="width:${pct}%"></div></div>
+      <div class="log-stat-chips">
+        <span class="chip chip-g" style="font-size:10px;padding:2px 7px">✓ ${entry.covered}</span>
+        ${entry.partial  ? `<span class="chip chip-a" style="font-size:10px;padding:2px 7px">~ ${entry.partial}</span>` : ''}
+        ${entry.escalate ? `<span class="chip chip-r" style="font-size:10px;padding:2px 7px">⚑ ${entry.escalate}</span>` : ''}
+        <span style="font-size:10px;color:var(--muted);margin-left:auto">${entry.total} requirements</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderLogTab() {
+  setLogTab('log');
+  const log = loadLog();
+  if (!log.length) {
+    el.logModalBody.innerHTML = `<div class="idle" style="min-height:220px"><div class="idle-icon">↗</div><div class="idle-text">No RFPs logged yet</div><div class="idle-sub">Analyse an RFP and it will appear here automatically</div></div>`;
+    return;
+  }
+  el.logModalSub.textContent = `${log.length} RFP${log.length !== 1 ? 's' : ''} · auto-saved`;
+  el.logModalBody.innerHTML = log.map(buildLogCard).join('');
+}
+
+function renderThemesTab() {
+  setLogTab('themes');
+  const log = loadLog();
+  if (!log.length) {
+    el.logModalBody.innerHTML = `<div class="idle" style="min-height:220px"><div class="idle-icon">◈</div><div class="idle-text">No data yet</div><div class="idle-sub">Log multiple RFPs to see patterns emerge</div></div>`;
+    return;
+  }
+  const { categories, recurringEscalations, totalRFPs, avgScore, problematic } = computeThemes(log);
+
+  const statsHtml = `<div class="themes-stats-strip">
+    <div class="themes-stat"><div class="themes-stat-n">${totalRFPs}</div><div class="themes-stat-l">RFPs logged</div></div>
+    <div class="themes-stat"><div class="themes-stat-n">${avgScore}%</div><div class="themes-stat-l">Avg score</div></div>
+    <div class="themes-stat themes-stat-warn">
+      <div class="themes-stat-n">${problematic ? escapeHTML(problematic.name) : '—'}</div>
+      <div class="themes-stat-l">Most problematic category</div>
+    </div>
+  </div>`;
+
+  const maxTotal = categories[0]?.total || 1;
+  const catRows = categories.map(c => {
+    const barW = (c.total / maxTotal * 100).toFixed(0);
+    const rateColor = c.coverageRate >= 70 ? 'var(--green)' : c.coverageRate >= 40 ? '#C47D1A' : 'var(--red)';
+    return `<div class="themes-cat-row">
+      <div class="themes-cat-name">${escapeHTML(c.name)}</div>
+      <div class="score-bar-track" style="height:6px"><div class="score-bar-fill" style="width:${barW}%;background:var(--brand)"></div></div>
+      <div class="themes-cat-count">${c.total}×</div>
+      <div class="themes-cat-rate" style="color:${rateColor}">${c.coverageRate}%</div>
+    </div>`;
+  }).join('');
+
+  const catSection = `<div class="themes-section">
+    <div class="themes-section-title">Category frequency &amp; coverage rate</div>
+    <div class="themes-cat-header"><span>Category</span><span></span><span style="text-align:right">Seen</span><span style="text-align:right">Coverage</span></div>
+    <div>${catRows}</div>
+  </div>`;
+
+  const escItems = recurringEscalations.map(e =>
+    `<div class="themes-esc-row">
+      <span class="req-badge badge-r" style="font-size:10px;flex-shrink:0;align-self:flex-start;margin-top:2px">⚑ ${e.count}×</span>
+      <div><div class="themes-esc-q">${escapeHTML(e.question)}</div><div class="themes-esc-cat">${escapeHTML(e.category)}</div></div>
+    </div>`
+  ).join('');
+
+  const escSection = `<div class="themes-section">
+    <div class="themes-section-title">Recurring escalations${recurringEscalations.length ? ` <span class="acc-count">${recurringEscalations.length}</span>` : ''}</div>
+    ${recurringEscalations.length
+      ? `<div class="themes-esc-list">${escItems}</div>`
+      : `<div style="font-size:12px;color:var(--muted);padding:6px 0">No recurring escalations — strong coverage consistency across RFPs.</div>`
+    }
+  </div>`;
+
+  el.logModalBody.innerHTML = statsHtml + catSection + escSection;
+}
+
+function openLogModal() {
+  renderLogTab();
+  el.logOverlay.classList.add('open');
+}
+
+function clearLog() {
+  if (!confirm('Clear all logged RFPs? This cannot be undone.')) return;
+  try { localStorage.removeItem(LOG_KEY); } catch {}
+  updateLogBadge();
+  renderLogTab();
+}
+
+function exportLog() {
+  const log = loadLog();
+  if (!log.length) return;
+  const lines = ['# Sitemate RFP Log Export', `_${new Date().toLocaleDateString('en-AU', { day:'numeric', month:'long', year:'numeric' })}_`, ''];
+  for (const entry of log) {
+    const d = new Date(entry.savedAt).toLocaleString('en-AU');
+    lines.push(`## ${entry.company || 'Unknown'} — ${d}`);
+    lines.push(`**Score:** ${entry.score}% · **Risk:** ${entry.riskLevel} · **Requirements:** ${entry.total}`);
+    lines.push(`Covered: ${entry.covered} · Partial: ${entry.partial} · Escalate: ${entry.escalate}`);
+    if (entry.deadline) lines.push(`Deadline: ${entry.deadline}`);
+    if (entry.budget)   lines.push(`Budget: ${entry.budget}`);
+    lines.push('');
+    for (const r of entry.requirements) {
+      const icon = r.status === 'covered' ? '✓' : r.status === 'partial' ? '~' : '⚑';
+      lines.push(`- ${icon} **${r.question}** _(${r.category})_`);
+      if (r.escalate_reason) lines.push(`  > ${r.escalate_reason}`);
+    }
+    lines.push('', '---', '');
+  }
+  download(lines.join('\n'), `rfp-log-${Date.now()}.md`, 'text/markdown');
+}
+
+/* ════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════ */
 function init() {
@@ -1208,6 +1500,17 @@ function init() {
     draftBody:     document.getElementById('draft-body'),
     draftCopyBtn:  document.getElementById('draft-copy-btn'),
     draftExportBtn:document.getElementById('draft-export-btn'),
+    logBtn:        document.getElementById('log-btn'),
+    logBadge:      document.getElementById('log-badge'),
+    logOverlay:    document.getElementById('log-overlay'),
+    logClose:      document.getElementById('log-close'),
+    logClose2:     document.getElementById('log-close2'),
+    logModalBody:  document.getElementById('log-modal-body'),
+    logModalSub:   document.getElementById('log-modal-sub'),
+    logTabLog:     document.getElementById('log-tab-log'),
+    logTabThemes:  document.getElementById('log-tab-themes'),
+    logClearBtn:   document.getElementById('log-clear-btn'),
+    logExportBtn:  document.getElementById('log-export-btn'),
   };
 
   document.querySelectorAll('.acc-btn').forEach(b => b.addEventListener('click', () => toggleAcc(b)));
@@ -1246,9 +1549,24 @@ function init() {
     if (lastDraft) download(lastDraft, `rfp-response-${Date.now()}.md`, 'text/markdown');
   });
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') el.draftOverlay.classList.remove('open'); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      el.draftOverlay.classList.remove('open');
+      el.logOverlay.classList.remove('open');
+    }
+  });
+
+  el.logBtn.addEventListener('click', openLogModal);
+  el.logClose.addEventListener('click',  () => el.logOverlay.classList.remove('open'));
+  el.logClose2.addEventListener('click', () => el.logOverlay.classList.remove('open'));
+  el.logOverlay.addEventListener('click', e => { if (e.target === el.logOverlay) el.logOverlay.classList.remove('open'); });
+  el.logTabLog.addEventListener('click',    renderLogTab);
+  el.logTabThemes.addEventListener('click', renderThemesTab);
+  el.logClearBtn.addEventListener('click',  clearLog);
+  el.logExportBtn.addEventListener('click', exportLog);
 
   updateCharCount();
+  updateLogBadge();
 }
 
 document.addEventListener('DOMContentLoaded', init);
