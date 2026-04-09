@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sitemate — RFP Response Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brand:        #7066E0;
+  --brand-dark:   #5852C8;
+  --brand-light:  #F0EEFF;
+  --brand-border: rgba(112,102,224,0.22);
+
+  --nav-bg: #1C1F2E;
+
+  --bg:       #F4F5F9;
+  --white:    #FFFFFF;
+  --surface:  #EDEEF4;
+  --surface2: #E4E6EF;
+  --border:   #DDE0ED;
+  --border2:  #C8CBDB;
+
+  --text:   #2E3940;
+  --text2:  #4A5568;
+  --muted:  #6E7881;
+  --muted2: #9BAAB8;
+
+  --green:        #0A7C55;
+  --green-bg:     #E8F5EE;
+  --green-border: rgba(10,124,85,0.2);
+  --amber:        #8A5C00;
+  --amber-bg:     #FEF6E4;
+  --amber-border: rgba(138,92,0,0.22);
+  --red:          #C0241F;
+  --red-bg:       #FDECEA;
+  --red-border:   rgba(192,36,31,0.2);
+
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Roboto', system-ui, sans-serif;
+  --radius: 8px; --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(28,31,46,0.08);
+  --shadow-md: 0 3px 10px rgba(28,31,46,0.12);
+  --shadow-lg: 0 8px 32px rgba(28,31,46,0.18);
+}
+
+html, body { height: 100%; overflow: hidden; }
+body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:13px; line-height:1.5; display:flex; flex-direction:column; }
+
+/* ── Topbar ── */
+.topbar { height:54px; background:var(--nav-bg); display:flex; align-items:center; justify-content:space-between; padding:0 20px; flex-shrink:0; z-index:50; border-bottom:1px solid rgba(255,255,255,0.06); }
+.topbar-left  { display:flex; align-items:center; gap:14px; }
+.topbar-right { display:flex; align-items:center; gap:8px; }
+
+.logo-wrap { display:flex; align-items:center; gap:10px; }
+.logo-mark { width:32px; height:32px; background:var(--brand); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(112,102,224,0.4); }
+.logo-mark svg { width:20px; height:20px; }
+.logo-name { font-size:17px; font-weight:700; color:#fff; letter-spacing:-0.03em; }
+.logo-name span { color:var(--brand); }
+
+.top-sep { width:1px; height:20px; background:rgba(255,255,255,0.12); }
+.page-crumb { font-size:12px; color:rgba(255,255,255,0.45); }
+
+.tb-badge { display:flex; align-items:center; gap:5px; border-radius:20px; padding:4px 10px; font-family:var(--mono); font-size:9px; letter-spacing:0.05em; border:1px solid; }
+.tb-live { background:rgba(112,102,224,0.18); border-color:rgba(112,102,224,0.35); color:#A99CF8; }
+.tb-live .dot { width:5px; height:5px; border-radius:50%; background:#A99CF8; animation:pulse 2s ease-in-out infinite; }
+.tb-demo { background:rgba(10,124,85,0.18); border-color:rgba(10,124,85,0.35); color:#4DC496; }
+.tb-demo .dot { width:5px; height:5px; border-radius:50%; background:#4DC496; animation:pulse 2.5s ease-in-out infinite; }
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+/* ── Layout ── */
+.main { display:grid; grid-template-columns:292px 1fr; flex:1; overflow:hidden; min-height:0; }
+
+/* ── Left panel ── */
+.sot { background:var(--white); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
+.sot-head { padding:14px 16px 12px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.sot-eyebrow { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
+.eyebrow { font-family:var(--mono); font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+.notion-chip { display:flex; align-items:center; gap:3px; background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:2px 6px; font-family:var(--mono); font-size:8px; color:var(--muted); }
+.sot-title { font-size:14px; font-weight:700; color:var(--text); letter-spacing:-0.02em; }
+.sot-sub   { font-size:11px; color:var(--muted); margin-top:2px; }
+.sot-scroll { flex:1; overflow-y:auto; min-height:0; }
+.sot-scroll::-webkit-scrollbar { width:3px; }
+.sot-scroll::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+.acc { border-bottom:1px solid var(--border); }
+.acc-btn { width:100%; background:none; border:none; display:flex; align-items:center; justify-content:space-between; padding:9px 16px; cursor:pointer; text-align:left; gap:8px; transition:background 0.12s; }
+.acc-btn:hover { background:var(--surface); }
+.acc-left { display:flex; align-items:center; gap:7px; flex:1; min-width:0; }
+.acc-icon { width:20px; height:20px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:9px; flex-shrink:0; }
+.i-brand { background:var(--brand-light); color:var(--brand); }
+.i-green { background:var(--green-bg); color:var(--green); }
+.i-red   { background:var(--red-bg);   color:var(--red);   }
+.acc-name  { font-size:12px; font-weight:500; color:var(--text); }
+.acc-count { font-family:var(--mono); font-size:9px; color:var(--muted); background:var(--surface); border-radius:8px; padding:1px 5px; }
+.acc-chevron { font-size:8px; color:var(--muted2); transition:transform 0.22s ease; flex-shrink:0; }
+.acc-chevron.open { transform:rotate(90deg); }
+.acc-body { max-height:0; overflow:hidden; transition:max-height 0.25s ease; padding:0 16px; }
+.acc-body.open { max-height:900px; padding-bottom:10px; }
+.sot-row { padding:6px 0; border-bottom:1px solid var(--surface); display:flex; flex-direction:column; gap:2px; }
+.sot-row:last-child { border-bottom:none; }
+.sot-key { font-family:var(--mono); font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+.sot-val { font-size:11.5px; color:var(--text2); line-height:1.45; }
+.tags { display:flex; flex-wrap:wrap; gap:3px; margin-top:3px; }
+.tag { font-family:var(--mono); font-size:9px; padding:2px 5px; border-radius:3px; }
+.tg { background:var(--green-bg); color:var(--green); }
+.ta { background:var(--amber-bg); color:var(--amber); }
+
+/* ── Right panel ── */
+.right { display:grid; grid-template-rows:1fr 1fr; overflow:hidden; min-height:0; }
+
+.intake { background:var(--white); border-bottom:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+.pane-head { padding:10px 18px 9px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.pane-title { font-size:13px; font-weight:600; color:var(--text); letter-spacing:-0.01em; }
+.pane-actions { display:flex; align-items:center; gap:7px; }
+
+.btn { font-family:var(--sans); font-size:12px; font-weight:500; border-radius:var(--radius); padding:6px 14px; cursor:pointer; border:none; transition:all 0.15s; display:inline-flex; align-items:center; gap:5px; }
+.btn-primary   { background:var(--brand); color:#fff; }
+.btn-primary:hover { background:var(--brand-dark); }
+.btn-primary:disabled { opacity:0.4; cursor:not-allowed; }
+.btn-secondary { background:var(--brand-light); color:var(--brand); border:1px solid var(--brand-border); }
+.btn-secondary:hover { background:#e4defd; }
+.btn-ghost  { background:transparent; color:var(--muted); border:1px solid var(--border); }
+.btn-ghost:hover { color:var(--text); border-color:var(--border2); }
+.btn-danger { background:var(--red-bg); color:var(--red); border:1px solid var(--red-border); }
+.btn-danger:hover { background:var(--red); color:#fff; }
+.btn-sm { padding:5px 10px; font-size:11px; }
+
+.intake-body { flex:1; display:grid; grid-template-columns:1fr 34px 1fr; overflow:hidden; min-height:0; }
+.textarea-wrap { display:flex; flex-direction:column; overflow:hidden; }
+textarea { flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:var(--mono); font-size:11px; line-height:1.75; padding:13px 16px; resize:none; min-height:0; }
+textarea::placeholder { color:var(--muted2); }
+.char-bar { padding:3px 16px 4px; border-top:1px solid var(--surface); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.char-count { font-family:var(--mono); font-size:9px; color:var(--muted2); }
+.char-count.warn { color:var(--amber); }
+.shortcut-hint { font-family:var(--mono); font-size:9px; color:var(--muted2); }
+kbd { background:var(--surface); border:1px solid var(--border2); border-radius:3px; padding:1px 4px; font-family:var(--mono); font-size:8px; }
+
+.or-col { display:flex; flex-direction:column; align-items:center; }
+.or-line { flex:1; width:1px; background:var(--border); }
+.or-pill { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:3px 5px; font-family:var(--mono); font-size:8px; color:var(--muted); letter-spacing:0.04em; flex-shrink:0; z-index:1; }
+
+.drop-col { display:flex; flex-direction:column; padding:12px 16px 12px 10px; }
+.drop-zone { flex:1; border:1.5px dashed var(--border2); border-radius:var(--radius); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; cursor:pointer; transition:all 0.15s; color:var(--muted); position:relative; text-align:center; }
+.drop-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.drop-zone:hover, .drop-zone.over { border-color:var(--brand); background:var(--brand-light); color:var(--brand); }
+.drop-zone.filled { border-style:solid; border-color:var(--green); background:var(--green-bg); color:var(--green); }
+.drop-icon { width:28px; height:28px; border:1px solid currentColor; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:12px; opacity:0.75; }
+.drop-label { font-size:11px; line-height:1.4; }
+.drop-types { font-family:var(--mono); font-size:9px; opacity:0.6; }
+.drop-filename { font-family:var(--mono); font-size:10px; max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.samples { padding:5px 16px 6px; border-top:1px solid var(--surface); display:flex; align-items:center; gap:5px; flex-wrap:wrap; flex-shrink:0; }
+.samples-label { font-family:var(--mono); font-size:9px; color:var(--muted2); }
+.sample-btn { font-family:var(--mono); font-size:9px; color:var(--muted); background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:3px 8px; cursor:pointer; transition:all 0.12s; }
+.sample-btn:hover { color:var(--brand); border-color:var(--brand-border); background:var(--brand-light); }
+
+/* ── Output ── */
+.output-wrap { background:var(--bg); display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+.output-head { padding:9px 18px 8px; border-bottom:1px solid var(--border); background:var(--white); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; gap:10px; }
+.output-head-left  { display:flex; align-items:center; gap:10px; min-width:0; }
+.output-head-right { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+
+.filter-tabs { display:flex; align-items:center; gap:2px; }
+.filter-tab { font-family:var(--mono); font-size:9px; padding:3px 8px; border-radius:5px; border:1px solid transparent; cursor:pointer; transition:all 0.12s; background:none; color:var(--muted); }
+.filter-tab:hover { background:var(--surface); color:var(--text); }
+.filter-tab.active { background:var(--brand-light); color:var(--brand); border-color:var(--brand-border); }
+
+.chips { display:flex; align-items:center; gap:5px; }
+.chip { display:flex; align-items:center; gap:4px; font-family:var(--mono); font-size:9px; padding:3px 8px; border-radius:10px; border:1px solid transparent; }
+.chip-g { background:var(--green-bg); color:var(--green); border-color:var(--green-border); }
+.chip-a { background:var(--amber-bg); color:var(--amber); border-color:var(--amber-border); }
+.chip-r { background:var(--red-bg);   color:var(--red);   border-color:var(--red-border); }
+
+.output-scroll { flex:1; overflow-y:auto; padding:12px 18px 18px; min-height:0; }
+.output-scroll::-webkit-scrollbar { width:3px; }
+.output-scroll::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+/* Score card */
+.score-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius-lg); padding:14px 18px 12px; margin-bottom:12px; box-shadow:var(--shadow-sm); display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:18px; }
+.score-ring-wrap { position:relative; width:56px; height:56px; flex-shrink:0; }
+.score-ring { transform:rotate(-90deg); }
+.score-ring-track { fill:none; stroke:var(--surface2); stroke-width:5; }
+.score-ring-fill  { fill:none; stroke-width:5; stroke-linecap:round; }
+.score-ring-text  { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-num { font-size:16px; font-weight:700; color:var(--text); letter-spacing:-0.03em; line-height:1; }
+.score-pct { font-family:var(--mono); font-size:8px; color:var(--muted); }
+.score-bars { display:flex; flex-direction:column; gap:5px; }
+.score-bar-row { display:flex; align-items:center; gap:8px; }
+.score-bar-label { font-family:var(--mono); font-size:9px; color:var(--muted); width:52px; }
+.score-bar-track { flex:1; height:5px; background:var(--surface2); border-radius:10px; overflow:hidden; }
+.score-bar-fill  { height:100%; border-radius:10px; transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1); }
+.sbar-g { background:var(--green); }
+.sbar-a { background:#C47D1A; }
+.sbar-r { background:var(--red); }
+.score-bar-n { font-family:var(--mono); font-size:9px; color:var(--muted); width:14px; text-align:right; }
+.score-risk { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 12px; border-radius:var(--radius); border:1px solid transparent; text-align:center; }
+.score-risk.low    { background:var(--green-bg); border-color:var(--green-border); color:var(--green); }
+.score-risk.medium { background:var(--amber-bg); border-color:var(--amber-border); color:var(--amber); }
+.score-risk.high   { background:var(--red-bg);   border-color:var(--red-border);   color:var(--red); }
+.risk-icon  { font-size:18px; line-height:1; }
+.risk-label { font-family:var(--mono); font-size:8px; text-transform:uppercase; letter-spacing:0.06em; }
+
+/* Idle / skeleton */
+.idle { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:10px; color:var(--muted2); }
+.idle-icon { width:42px; height:42px; border:1px solid var(--border2); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.idle-text { font-size:12px; }
+.idle-sub  { font-family:var(--mono); font-size:9px; }
+
+.skeleton-wrap { display:flex; flex-direction:column; gap:7px; }
+.skeleton-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); }
+.skeleton-inner { padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
+.skeleton-bar { height:10px; border-radius:4px; background:linear-gradient(90deg,var(--surface) 25%,var(--border) 50%,var(--surface) 75%); background-size:200% 100%; animation:shimmer 1.4s ease-in-out infinite; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* Result cards */
+.req-list { display:flex; flex-direction:column; gap:6px; }
+.req-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); transition:box-shadow 0.15s; }
+.req-card:hover { box-shadow:var(--shadow-md); }
+.req-card.hidden { display:none; }
+.req-head { display:flex; align-items:stretch; }
+.status-stripe { width:3px; flex-shrink:0; }
+.stripe-g { background:var(--green); }
+.stripe-a { background:#C47D1A; }
+.stripe-r { background:var(--red); }
+.req-head-inner { flex:1; display:flex; align-items:flex-start; justify-content:space-between; padding:9px 11px; gap:8px; }
+.req-q    { font-size:12px; font-weight:500; color:var(--text); line-height:1.4; }
+.req-meta { display:flex; align-items:center; gap:5px; margin-top:3px; flex-wrap:wrap; }
+.req-cat  { font-family:var(--mono); font-size:9px; color:var(--muted); background:var(--surface); border-radius:3px; padding:1px 5px; }
+.req-badge { font-family:var(--mono); font-size:9px; padding:1px 6px; border-radius:3px; border:1px solid transparent; }
+.badge-g { background:var(--green-bg); color:var(--green); border-color:var(--green-border); }
+.badge-a { background:var(--amber-bg); color:var(--amber); border-color:var(--amber-border); }
+.badge-r { background:var(--red-bg);   color:var(--red);   border-color:var(--red-border); }
+.copy-btn { background:none; border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-family:var(--mono); font-size:9px; color:var(--muted); cursor:pointer; transition:all 0.12s; white-space:nowrap; flex-shrink:0; align-self:flex-start; }
+.copy-btn:hover { color:var(--brand); border-color:var(--brand-border); background:var(--brand-light); }
+.copy-btn.copied { color:var(--green); border-color:var(--green-border); background:var(--green-bg); }
+.req-answer { padding:7px 11px 9px 14px; border-top:1px solid var(--surface); background:var(--bg); font-size:11.5px; color:var(--text2); line-height:1.55; }
+.answer-label { font-family:var(--mono); font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px; }
+.answer-text ul { padding-left:14px; margin-top:3px; }
+.answer-text li { margin-bottom:1px; }
+.answer-text strong { color:var(--text); }
+.escalate-row { display:flex; align-items:flex-start; gap:6px; margin-top:6px; padding:6px 8px; background:var(--red-bg); border:1px solid var(--red-border); border-radius:5px; font-size:11px; color:var(--red); line-height:1.45; }
+
+/* Draft meta chips */
+.meta-strip { display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+.meta-chip { font-family:var(--mono); font-size:9px; padding:3px 8px; border-radius:10px; background:var(--brand-light); color:var(--brand); border:1px solid var(--brand-border); }
+
+/* Modal */
+.overlay { position:fixed; inset:0; z-index:100; background:rgba(28,31,46,0.55); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+.overlay.open { opacity:1; pointer-events:all; }
+.modal { background:var(--white); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); transform:translateY(10px) scale(0.97); transition:transform 0.22s cubic-bezier(0.34,1.2,0.64,1); overflow:hidden; }
+.overlay.open .modal { transform:translateY(0) scale(1); }
+.modal-lg { width:740px; max-width:calc(100vw - 40px); max-height:calc(100vh - 60px); display:flex; flex-direction:column; }
+.modal-head { padding:16px 20px 12px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; justify-content:space-between; flex-shrink:0; }
+.modal-title { font-size:15px; font-weight:700; color:var(--text); letter-spacing:-0.02em; }
+.modal-sub   { font-size:11px; color:var(--muted); margin-top:2px; }
+.modal-close { width:24px; height:24px; border:none; background:var(--surface); border-radius:5px; cursor:pointer; font-size:12px; color:var(--muted); display:flex; align-items:center; justify-content:center; transition:all 0.12s; flex-shrink:0; }
+.modal-close:hover { background:var(--border2); color:var(--text); }
+.modal-body { padding:16px 20px; flex:1; overflow-y:auto; min-height:0; }
+.modal-body::-webkit-scrollbar { width:4px; }
+.modal-body::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+.modal-foot { padding:12px 20px 14px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.modal-foot-left  { display:flex; gap:8px; }
+.modal-foot-right { display:flex; gap:8px; }
+
+.draft-content { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; font-size:12px; color:var(--text2); line-height:1.7; }
+.draft-content h1,.draft-content h2,.draft-content h3 { color:var(--text); font-weight:600; margin:12px 0 5px; }
+.draft-content h1 { font-size:15px; } .draft-content h2 { font-size:13px; } .draft-content h3 { font-size:12px; }
+.draft-content p  { margin-bottom:8px; }
+.draft-content ul,.draft-content ol { padding-left:18px; margin-bottom:8px; }
+.draft-content li { margin-bottom:3px; }
+.draft-content strong { color:var(--text); font-weight:600; }
+.draft-content hr { border:none; border-top:1px solid var(--border); margin:12px 0; }
+
+.draft-loading { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:200px; gap:12px; color:var(--muted); }
+.draft-spinner { width:28px; height:28px; border:3px solid var(--border); border-top-color:var(--brand); border-radius:50%; animation:spin 0.7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+@keyframes dots { 0%{content:''} 33%{content:'.'} 66%{content:'..'} 100%{content:'...'} }
+.dots::after { content:''; animation:dots 1.2s steps(1) infinite; }
+</style>
+</head>
+<body>
+
+<!-- Draft Response Modal -->
+<div class="overlay" id="draft-overlay" role="dialog" aria-modal="true">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Draft RFP response</div>
+        <div class="modal-sub">Ready to copy — edit before sending</div>
+      </div>
+      <button class="modal-close" id="draft-close">✕</button>
+    </div>
+    <div class="modal-body" id="draft-body">
+      <div class="draft-loading">
+        <div class="draft-spinner"></div>
+        <div class="draft-loading-text dots">Generating response</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="modal-foot-left">
+        <button class="btn btn-ghost btn-sm" id="draft-export-btn" style="display:none">↓ Export .md</button>
+      </div>
+      <div class="modal-foot-right">
+        <button class="btn btn-ghost btn-sm" id="draft-close2">Close</button>
+        <button class="btn btn-primary btn-sm" id="draft-copy-btn" style="display:none">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="logo-wrap">
+      <div class="logo-mark">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1.5" width="12" height="8" rx="2.5" fill="white"/>
+          <path d="M10 9.5 L13 13 L13 9.5" fill="white"/>
+          <rect x="7" y="10.5" width="12" height="8" rx="2.5" fill="white" opacity="0.85"/>
+          <path d="M10 10.5 L7 7 L7 10.5" fill="white" opacity="0.85"/>
+        </svg>
+      </div>
+      <span class="logo-name">Site<span>mate</span></span>
+    </div>
+    <div class="top-sep"></div>
+    <span class="page-crumb">RFP Response Hub</span>
+  </div>
+  <div class="topbar-right">
+    <div class="tb-badge tb-live"><div class="dot"></div>SOT live</div>
+    <div class="tb-badge tb-demo"><div class="dot"></div>Demo mode</div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Left: Source of Truth -->
+  <aside class="sot">
+    <div class="sot-head">
+      <div class="sot-eyebrow">
+        <span class="eyebrow">Knowledge Base</span>
+        <span class="notion-chip">
+          <svg width="8" height="8" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="3" fill="#000"/><path d="M5 5h10v2H5zm0 4h10v2H5zm0 4h7v2H5z" fill="white"/></svg>
+          Notion sync
+        </span>
+      </div>
+      <div class="sot-title">Source of Truth</div>
+      <div class="sot-sub">Approved answers · escalation rules · ICP</div>
+    </div>
+    <div class="sot-scroll">
+
+      <div class="acc">
+        <button class="acc-btn" data-acc="products" aria-expanded="true">
+          <div class="acc-left"><div class="acc-icon i-brand">▣</div><span class="acc-name">Products</span><span class="acc-count">4</span></div>
+          <span class="acc-chevron open">▶</span>
+        </button>
+        <div class="acc-body open" id="acc-body-products">
+          <div class="sot-row"><div class="sot-key">Dashpivot</div><div class="sot-val">No-code configurable forms. Safety, quality, compliance, field reporting. Approval workflows, PDF export, analytics.</div></div>
+          <div class="sot-row"><div class="sot-key">Sitemate App</div><div class="sot-val">Mobile-first field capture. Full offline on iOS &amp; Android. Subcontractor digital ID, QR sign-on, photo, e-signature.</div></div>
+          <div class="sot-row"><div class="sot-key">Flowsite</div><div class="sot-val">No-code integrations. SAP, Procore, Xero, MYOB, KeyPay, Employment Hero, Aconex. Custom API available.</div></div>
+          <div class="sot-row"><div class="sot-key">Gearbelt</div><div class="sot-val">Digital asset &amp; equipment management. Asset register, maintenance scheduling, inspection records.</div></div>
+        </div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-btn" data-acc="icp" aria-expanded="false">
+          <div class="acc-left"><div class="acc-icon i-brand">◈</div><span class="acc-name">Ideal customer</span><span class="acc-count">3</span></div>
+          <span class="acc-chevron">▶</span>
+        </button>
+        <div class="acc-body" id="acc-body-icp">
+          <div class="sot-row"><div class="sot-key">Industries</div><div class="tags"><span class="tag tg">Construction</span><span class="tag tg">Mining</span><span class="tag tg">Civil</span><span class="tag tg">Utilities</span><span class="tag tg">Oil &amp; gas</span><span class="tag tg">Agriculture</span><span class="tag tg">Manufacturing</span><span class="tag ta">Facilities</span><span class="tag ta">Logistics</span></div></div>
+          <div class="sot-row"><div class="sot-key">Size</div><div class="sot-val">50–5,000 employees with significant field-based workforce.</div></div>
+          <div class="sot-row"><div class="sot-key">Pain</div><div class="sot-val">Paper, Excel, or rigid legacy systems. Need real-time visibility, compliance tracking, mobile capture.</div></div>
+        </div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-btn" data-acc="answers" aria-expanded="false">
+          <div class="acc-left"><div class="acc-icon i-green">✓</div><span class="acc-name">Approved answers</span><span class="acc-count">6</span></div>
+          <span class="acc-chevron">▶</span>
+        </button>
+        <div class="acc-body" id="acc-body-answers">
+          <div class="sot-row"><div class="sot-key">Offline</div><div class="sot-val">Full offline on iOS and Android. Syncs automatically when connectivity restored.</div></div>
+          <div class="sot-row"><div class="sot-key">Security</div><div class="sot-val">SOC 2 Type II. TLS 1.2 in transit, AES-256 at rest. AWS hosted. Australian data residency available.</div></div>
+          <div class="sot-row"><div class="sot-key">Integrations</div><div class="sot-val">SAP, Procore, Xero, MYOB, KeyPay, Employment Hero, Aconex via Flowsite. Custom API available.</div></div>
+          <div class="sot-row"><div class="sot-key">Implementation</div><div class="sot-val">Typical 4–8 weeks. No-code configuration — teams self-serve without IT dependency.</div></div>
+          <div class="sot-row"><div class="sot-key">Pricing</div><div class="sot-val">Per-user SaaS, annual contracts. Volume discounts for 200+ users.</div></div>
+          <div class="sot-row"><div class="sot-key">Support</div><div class="sot-val">Dedicated CSM for enterprise. In-app support and live chat for all tiers.</div></div>
+        </div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-btn" data-acc="escalate" aria-expanded="false">
+          <div class="acc-left"><div class="acc-icon i-red">⚑</div><span class="acc-name">Escalate to leaders</span><span class="acc-count">4</span></div>
+          <span class="acc-chevron">▶</span>
+        </button>
+        <div class="acc-body" id="acc-body-escalate">
+          <div class="sot-row"><div class="sot-key">Custom SLAs</div><div class="sot-val">Non-standard uptime or P1 response → Head of Product + Legal required.</div></div>
+          <div class="sot-row"><div class="sot-key">Pricing exceptions</div><div class="sot-val">Any deviation from per-user model → CRO approval.</div></div>
+          <div class="sot-row"><div class="sot-key">Custom dev</div><div class="sot-val">Bespoke features must go through product strategy — cannot commit in RFP.</div></div>
+          <div class="sot-row"><div class="sot-key">Data sovereignty</div><div class="sot-val">Non-ANZ residency (UK, EU, Canada, UAE) → infrastructure team must confirm.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Right -->
+  <div class="right">
+
+    <div class="intake">
+      <div class="pane-head">
+        <span class="pane-title">RFP intake</span>
+        <div class="pane-actions">
+          <button class="btn btn-ghost btn-sm" id="clear-btn">Clear</button>
+          <button class="btn btn-primary" id="process-btn">Analyse →</button>
+        </div>
+      </div>
+      <div class="intake-body">
+        <div class="textarea-wrap">
+          <textarea id="rfp-input" placeholder="Paste RFP text, email, or requirements here…&#10;&#10;Ctrl + Enter to analyse"></textarea>
+          <div class="char-bar">
+            <div class="char-count" id="char-count">0 chars</div>
+            <div class="shortcut-hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd></div>
+          </div>
+        </div>
+        <div class="or-col">
+          <div class="or-line"></div><span class="or-pill">or</span><div class="or-line"></div>
+        </div>
+        <div class="drop-col">
+          <div class="drop-zone" id="drop-zone">
+            <input type="file" accept=".xlsx,.xls,.csv,.txt,.md" id="file-input">
+            <div class="drop-icon" id="drop-icon">↓</div>
+            <div class="drop-label" id="drop-label">Drop Excel, CSV<br>or text file</div>
+            <div class="drop-types" id="drop-types">.xlsx · .xls · .csv · .txt</div>
+          </div>
+        </div>
+      </div>
+      <div class="samples">
+        <span class="samples-label">Samples:</span>
+        <button class="sample-btn" data-sample="mining">Mining RFP</button>
+        <button class="sample-btn" data-sample="construction">Civil contractor</button>
+        <button class="sample-btn" data-sample="complex">Complex / escalations</button>
+      </div>
+    </div>
+
+    <div class="output-wrap">
+      <div class="output-head">
+        <div class="output-head-left">
+          <span class="pane-title">Coverage mapping</span>
+          <div class="chips" id="chips"></div>
+        </div>
+        <div class="output-head-right" id="output-actions" style="display:none">
+          <div class="filter-tabs" id="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="covered">Covered</button>
+            <button class="filter-tab" data-filter="partial">Partial</button>
+            <button class="filter-tab" data-filter="escalate">Escalate</button>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="draft-btn">✦ Generate response</button>
+          <button class="btn btn-ghost btn-sm" id="export-btn">↓ .md</button>
+        </div>
+      </div>
+      <div class="output-scroll" id="output">
+        <div class="idle">
+          <div class="idle-icon">→</div>
+          <div class="idle-text">Paste or drop an RFP, then click Analyse</div>
+          <div class="idle-sub">Coverage mapping · draft responses · deal risk signals</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+'use strict';
+
+/* ════════════════════════════════════════════════
+   SAMPLE TEXT
+════════════════════════════════════════════════ */
+const SAMPLES = {
+  mining: `Copper Range Mining — RFP Requirements
+Digital Field Management System, Mount Isa Expansion
+Response required by: 30 April 2026
+
+1. Mobile application with full offline capability — NT site has no reliable coverage
+2. Configurable no-code form builder for safety inductions, pre-start checks, equipment inspections, incident reports
+3. Integration with SAP ERP and Employment Hero HR system
+4. Australian data residency — hard requirement
+5. SOC 2 or ISO 27001 certification required
+6. Implementation across 4 sites within 10 weeks of contract
+7. Per-user annual pricing and volume discounts for 400+ users
+8. References from mining or heavy industry customers in Australia`,
+
+  construction: `Hartwell Civil Contractors — Software Requirements
+Safety & Compliance Platform
+Budget: $60,000–$90,000 AUD annually
+
+- Digital SWMS creation and sign-off in the field
+- Site sign-on and visitor management
+- Subcontractor compliance tracking
+- Incident and near-miss reporting
+- Integration with KeyPay payroll
+- Mobile-first, works offline on site
+- Live within 8 weeks of contract execution
+- Pricing for 180 field workers + 20 office staff`,
+
+  complex: `Global Infrastructure Partners — Enterprise RFP
+Field Operations Platform, Global Deployment
+Deadline: 25 April 2026
+
+1. Mobile offline data capture — 2,400 users across Australia, UK, Canada, UAE
+2. No-code form configuration by regional ops teams without vendor involvement
+3. Data residency: ANZ data in Australia, UK data GDPR-compliant in UK, Canada data in-country
+4. Integration with SAP S/4HANA globally plus regional payroll systems
+5. Custom SLA: 99.95% uptime, 4-hour P1 response time
+6. Bespoke onboarding module built to our proprietary induction programme spec
+7. Single global enterprise licence agreement — per-user pricing not acceptable
+8. Full global rollout within 16 weeks`
+};
+
+/* ════════════════════════════════════════════════
+   MOCK RESULTS
+════════════════════════════════════════════════ */
+const MOCK_RESULTS = {
+
+  mining: {
+    company: 'Copper Range Mining', deadline: '30 April 2026', budget: '',
+    requirements: [
+      { question: 'Mobile app with full offline capability', category: 'Offline & mobile', status: 'covered',
+        answer: 'Full offline on iOS and Android via the Sitemate App. Syncs automatically when connectivity is restored — no manual action needed. Purpose-built for remote sites with no coverage.', escalate_reason: '' },
+      { question: 'No-code configurable form builder', category: 'Product capability', status: 'covered',
+        answer: 'Dashpivot provides a no-code form builder for safety inductions, pre-start checks, equipment inspections, and incident reports. Teams configure and update forms without any IT involvement.', escalate_reason: '' },
+      { question: 'SAP ERP and Employment Hero integration', category: 'Integrations', status: 'covered',
+        answer: 'Both SAP and Employment Hero are supported natively via Flowsite, our no-code integration layer. Data flows automatically — no custom development required.', escalate_reason: '' },
+      { question: 'Australian data residency — hard requirement', category: 'Data residency', status: 'covered',
+        answer: 'Australian data residency is confirmed. Data is hosted on AWS ap-southeast-2 (Sydney) as standard — not an add-on.', escalate_reason: '' },
+      { question: 'SOC 2 or ISO 27001 certification', category: 'Security & compliance', status: 'covered',
+        answer: 'Sitemate holds SOC 2 Type II. TLS 1.2 in transit, AES-256 at rest. Full security documentation and penetration test results available on request.', escalate_reason: '' },
+      { question: 'Implementation across 4 sites in 10 weeks', category: 'Implementation', status: 'partial',
+        answer: 'Standard timeline is 4–8 weeks. A 10-week multi-site rollout across 4 sites is achievable with our dedicated enterprise onboarding team. A detailed site-by-site project plan is provided post-contract.', escalate_reason: '' },
+      { question: 'Per-user pricing, volume discounts 400+ users', category: 'Pricing', status: 'covered',
+        answer: 'Per-user SaaS on annual contracts. 400-user deployments qualify for enterprise tier pricing. Indicative commercial proposal available within 48 hours.', escalate_reason: '' },
+      { question: 'Australian mining industry references', category: 'References', status: 'covered',
+        answer: 'Multiple Australian mining and heavy industry references available. We can provide case studies and direct reference contacts from comparable operations on request.', escalate_reason: '' },
+    ]
+  },
+
+  construction: {
+    company: 'Hartwell Civil Contractors', deadline: '', budget: '$60,000–$90,000 AUD annually',
+    requirements: [
+      { question: 'Digital SWMS creation and sign-off in field', category: 'Product capability', status: 'covered',
+        answer: 'Dashpivot natively supports digital SWMS creation, review, and sign-off in the field. Workers sign on mobile, PDFs are auto-generated and archived.', escalate_reason: '' },
+      { question: 'Site sign-on and visitor management', category: 'Product capability', status: 'covered',
+        answer: 'QR-based site sign-on and visitor management is built into the Sitemate App. Works fully offline — records sync when connectivity returns.', escalate_reason: '' },
+      { question: 'Subcontractor compliance tracking', category: 'Product capability', status: 'covered',
+        answer: 'Subcontractor compliance — inductions, licences, insurance — is tracked natively in Dashpivot with automated alerts for expiring documents.', escalate_reason: '' },
+      { question: 'Incident and near-miss reporting', category: 'Product capability', status: 'covered',
+        answer: 'Incident and near-miss reporting forms are available as configurable templates in Dashpivot. Approval workflows, notifications, and reporting dashboards included.', escalate_reason: '' },
+      { question: 'KeyPay payroll integration', category: 'Integrations', status: 'covered',
+        answer: 'KeyPay integration is supported natively via Flowsite. Timesheet data flows automatically — no manual re-entry required.', escalate_reason: '' },
+      { question: 'Mobile-first, full offline on site', category: 'Offline & mobile', status: 'covered',
+        answer: 'Full offline capability on iOS and Android across all modules. Forms, sign-ons, and inspections all work without connectivity and sync automatically.', escalate_reason: '' },
+      { question: 'Live within 8 weeks of contract', category: 'Implementation', status: 'covered',
+        answer: '8 weeks is well within our standard 4–8 week implementation range. No-code configuration means your team can self-serve without IT dependency.', escalate_reason: '' },
+      { question: 'Pricing for 200 users (180 field + 20 office)', category: 'Pricing', status: 'covered',
+        answer: '200-user deployments qualify for volume pricing. Budget of $60–90K AUD annually is feasible — we can provide an indicative proposal scoped to your exact seat mix.', escalate_reason: '' },
+    ]
+  },
+
+  complex: {
+    company: 'Global Infrastructure Partners', deadline: '25 April 2026', budget: '',
+    requirements: [
+      { question: 'Mobile offline capture, 2,400 global users', category: 'Offline & mobile', status: 'covered',
+        answer: 'Full offline capability on iOS and Android scales to any user count. Enterprise deployments of 2,400+ users are fully supported — dedicated enterprise onboarding included.', escalate_reason: '' },
+      { question: 'No-code form config by regional ops teams', category: 'Product capability', status: 'covered',
+        answer: 'Dashpivot is designed for no-code self-service. Regional ops teams can build, copy, and modify forms without vendor involvement or IT support.', escalate_reason: '' },
+      { question: 'UK and Canada in-country data residency', category: 'Data residency', status: 'escalate',
+        answer: '', escalate_reason: 'ANZ data residency is confirmed. UK (GDPR-compliant) and Canada in-country residency are not standard — our infrastructure team must assess feasibility before we can commit. This requires sign-off before contract execution.' },
+      { question: 'UAE data residency requirement', category: 'Data residency', status: 'escalate',
+        answer: '', escalate_reason: 'UAE data residency is not in our current standard offering. Infrastructure team must evaluate — we cannot commit to this in the RFP response.' },
+      { question: 'SAP S/4HANA global integration', category: 'Integrations', status: 'covered',
+        answer: 'SAP S/4HANA is supported via Flowsite. Global deployments with regional payroll system variations can be scoped during implementation planning.', escalate_reason: '' },
+      { question: 'Custom SLA: 99.95% uptime, 4-hour P1', category: 'SLA & support', status: 'escalate',
+        answer: '', escalate_reason: 'Our standard SLA is 99.9% uptime with next-business-day P1 response. A 99.95% uptime guarantee and 4-hour P1 SLA is non-standard and requires Head of Product and Legal sign-off before committing.' },
+      { question: 'Bespoke onboarding module to proprietary spec', category: 'Product capability', status: 'escalate',
+        answer: '', escalate_reason: 'Custom feature development requires product strategy approval. We cannot commit to bespoke module builds in an RFP response — we recommend a post-award scoping workshop to explore options.' },
+      { question: 'Single global enterprise licence, no per-user', category: 'Pricing', status: 'escalate',
+        answer: '', escalate_reason: 'Sitemate\'s standard model is per-user SaaS. A flat global enterprise licence is a non-standard pricing structure requiring CRO approval before we can put a number to it.' },
+      { question: 'Full global rollout within 16 weeks', category: 'Implementation', status: 'partial',
+        answer: 'A 16-week global rollout for 2,400 users across 4 regions is ambitious but potentially achievable with dedicated resourcing and phased go-lives. A detailed rollout plan would need to be developed during contract negotiation.', escalate_reason: '' },
+    ]
+  }
+};
+
+/* ════════════════════════════════════════════════
+   MOCK DRAFT RESPONSES
+════════════════════════════════════════════════ */
+const MOCK_DRAFTS = {
+
+  mining: `## Executive Summary
+
+Thank you for the opportunity to respond to the Copper Range Mining RFP for a Digital Field Management System to support the Mount Isa Expansion.
+
+Sitemate is purpose-built for exactly this use case: a remote, multi-site mining environment requiring robust offline capability, safety and compliance forms, and ERP integration. We cover **7 of 8 requirements in full**, with one partial item (implementation timeline) where we are confident a 10-week multi-site rollout is achievable.
+
+---
+
+## Requirements Response
+
+**1. Mobile offline capability**
+Confirmed. The Sitemate App provides full offline functionality on iOS and Android. All forms, sign-ons, and inspections work without any connectivity and sync automatically when a signal is available. No manual action required — purpose-built for NT sites.
+
+**2. No-code form builder**
+Confirmed. Dashpivot includes a no-code form builder for safety inductions, pre-start checks, equipment inspections, and incident reports. Your team configures and updates forms without IT involvement.
+
+**3. SAP ERP + Employment Hero integration**
+Confirmed. Both are supported natively via Flowsite, our no-code integration layer. Data flows automatically with no custom development.
+
+**4. Australian data residency**
+Confirmed. All data is hosted on AWS ap-southeast-2 (Sydney) as standard — not a premium add-on.
+
+**5. SOC 2 Type II certification**
+Confirmed. Full security documentation, penetration test results, and our trust portal are available on request.
+
+**6. Implementation across 4 sites within 10 weeks**
+Achievable. Our standard timeline is 4–8 weeks. With our dedicated enterprise onboarding team, a 10-week multi-site rollout is within scope. We will provide a detailed site-by-site project plan at contract execution.
+
+**7. Per-user pricing + volume discounts for 400+ users**
+Confirmed. Per-user annual SaaS, with enterprise tier pricing for 400+ users. We can provide an indicative commercial proposal within 48 hours of this submission.
+
+**8. Australian mining references**
+Confirmed. We have multiple comparable references across Australian mining and resources — case studies and direct contacts available on request.
+
+---
+
+## Implementation Approach
+
+We propose a phased rollout across 4 sites within the 10-week window:
+
+- **Weeks 1–2:** Platform configuration, admin training, form library setup
+- **Weeks 3–5:** Sites 1 & 2 go-live with onsite onboarding support
+- **Weeks 6–8:** Sites 3 & 4 go-live
+- **Weeks 9–10:** Stabilisation, optimisation, handover to dedicated CSM
+
+---
+
+## Next Steps
+
+We'd welcome the chance to run a live demo tailored to your Mount Isa use cases — including an offline field walkthrough. Please reach out to arrange a session.
+
+**Sitemate Team**`,
+
+  construction: `## Executive Summary
+
+Thank you for the opportunity to respond to Hartwell Civil Contractors' requirements for a Safety & Compliance Platform.
+
+Sitemate covers all 8 of your listed requirements in full, within your budget range, and with an 8-week go-live timeline. We have extensive deployment experience with civil and construction contractors across Australia.
+
+---
+
+## Requirements Response
+
+**Digital SWMS creation and field sign-off**
+Covered natively in Dashpivot. Workers create, review, and sign SWMS on mobile — PDFs are automatically generated and archived for audit purposes.
+
+**Site sign-on and visitor management**
+The Sitemate App includes QR-based site sign-on and visitor management out of the box. Works fully offline.
+
+**Subcontractor compliance tracking**
+Inductions, licences, and insurance certificates are tracked in Dashpivot with automated expiry alerts. No more spreadsheets or manual chasing.
+
+**Incident and near-miss reporting**
+Configurable incident and near-miss forms with built-in approval workflows, notifications, and reporting dashboards — all standard.
+
+**KeyPay payroll integration**
+Supported natively via Flowsite. Timesheets flow automatically to KeyPay — no manual re-entry.
+
+**Mobile-first, full offline**
+All modules work offline on iOS and Android. Data syncs automatically when connectivity returns — essential for site environments.
+
+**Live within 8 weeks**
+8 weeks is within our standard 4–8 week range. No-code configuration means your team can self-serve updates after go-live.
+
+**Pricing for 200 users**
+Per-user annual SaaS. Your 200-user mix (180 field + 20 office) qualifies for volume pricing. An indicative proposal within your $60–90K AUD budget range is available — we'll confirm exact figures within 48 hours.
+
+---
+
+## Next Steps
+
+We'd recommend a 30-minute product walkthrough focused on SWMS, site sign-on, and the KeyPay integration. We can have a tailored demo ready within 24 hours.
+
+**Sitemate Team**`,
+
+  complex: `## Executive Summary
+
+Thank you for the opportunity to respond to the Global Infrastructure Partners Enterprise RFP for a Field Operations Platform.
+
+We can confirm coverage for 4 of 9 requirements outright, with 1 partial and **4 items that require internal sign-off** before we can commit. We are being transparent about this — we would rather flag these early than over-promise in the RFP and create issues post-contract.
+
+We recommend a follow-up call with our leadership team to address the escalation items directly.
+
+---
+
+## Requirements Response
+
+**1. Mobile offline capture — 2,400 global users**
+Confirmed. Full offline capability scales to any user count. Enterprise deployments of this scale are fully supported.
+
+**2. No-code form configuration by regional teams**
+Confirmed. Dashpivot is designed for regional self-service — teams configure forms without vendor involvement.
+
+**3. Data residency: AU, UK, Canada**
+- **Australia (ANZ):** Confirmed — AWS Sydney, standard.
+- **UK (GDPR) and Canada in-country:** ⚑ Requires infrastructure team sign-off. We cannot commit in this response — we will have a confirmed answer within 5 business days.
+
+**4. UAE data residency**
+⚑ Not currently in our standard offering. Infrastructure assessment required. We will revert with a definitive answer before the deadline.
+
+**5. SAP S/4HANA global integration**
+Confirmed via Flowsite. Regional payroll system variations can be scoped during implementation.
+
+**6. Custom SLA: 99.95% uptime, 4-hour P1**
+⚑ Standard SLA is 99.9% uptime with next-business-day P1. Meeting the 99.95% / 4-hour requirement requires Head of Product and Legal sign-off. We are escalating internally and will respond before 25 April.
+
+**7. Bespoke onboarding module**
+⚑ Custom feature development requires product strategy approval. We cannot commit to bespoke builds in this response — we propose a post-award scoping workshop to define the best path forward.
+
+**8. Single global enterprise licence**
+⚑ Our standard model is per-user SaaS. A flat global enterprise licence requires CRO approval. We are escalating this internally and will respond with a formal position before the deadline.
+
+**9. Global rollout within 16 weeks**
+Partial. A 16-week rollout for 2,400 users across 4 regions is ambitious. With dedicated resourcing and phased go-lives it may be achievable — we would need to develop a detailed rollout plan during negotiation.
+
+---
+
+## Escalation Items — Committed Response Date
+
+We are escalating items 3, 4, 6, 7, and 8 internally. We commit to providing a definitive written response on each by **22 April 2026**, ahead of your 25 April deadline.
+
+---
+
+## Recommended Next Steps
+
+We strongly recommend a 60-minute call between your procurement lead and our CRO and Head of Product to work through the escalation items directly. This will be faster and more productive than written back-and-forth.
+
+Please reach out to arrange this at your earliest convenience.
+
+**Sitemate Team**`
+};
+
+/* ════════════════════════════════════════════════
+   GENERIC MOCK (for arbitrary pasted text)
+════════════════════════════════════════════════ */
+function buildGenericResult(text) {
+  const t = text.toLowerCase();
+  const reqs = [];
+
+  if (/offline|no.?coverage|remote|connectivity/.test(t))
+    reqs.push({ question: 'Full offline mobile capability required', category: 'Offline & mobile', status: 'covered', answer: 'Full offline on iOS and Android via the Sitemate App. Auto-syncs when connectivity is restored.', escalate_reason: '' });
+
+  if (/swms|safe work method/.test(t))
+    reqs.push({ question: 'Digital SWMS creation and sign-off', category: 'Product capability', status: 'covered', answer: 'SWMS creation, review, and digital sign-off is built into Dashpivot. PDFs auto-generated for records.', escalate_reason: '' });
+
+  if (/form|inspection|induction|checklist/.test(t))
+    reqs.push({ question: 'Configurable forms and inspection templates', category: 'Product capability', status: 'covered', answer: 'Dashpivot provides a no-code form builder for any inspection, induction, or compliance form — no IT required.', escalate_reason: '' });
+
+  if (/sign.?on|visitor|site.?access|qr/.test(t))
+    reqs.push({ question: 'Site sign-on and visitor management', category: 'Product capability', status: 'covered', answer: 'QR-based site sign-on and visitor management is built into the Sitemate App. Works fully offline.', escalate_reason: '' });
+
+  if (/subcontract|compliance.track|insurance|licen/.test(t))
+    reqs.push({ question: 'Subcontractor compliance tracking', category: 'Product capability', status: 'covered', answer: 'Subcontractor inductions, licences, and insurance tracked in Dashpivot with automated expiry alerts.', escalate_reason: '' });
+
+  if (/incident|near.?miss|hazard/.test(t))
+    reqs.push({ question: 'Incident and near-miss reporting', category: 'Product capability', status: 'covered', answer: 'Configurable incident and near-miss forms with approval workflows and dashboards — standard in Dashpivot.', escalate_reason: '' });
+
+  if (/sap|procore|xero|myob|keypay|employment hero|aconex/.test(t))
+    reqs.push({ question: 'ERP / payroll system integration', category: 'Integrations', status: 'covered', answer: 'SAP, Procore, Xero, MYOB, KeyPay, Employment Hero, and Aconex are all supported via Flowsite, our no-code integration layer.', escalate_reason: '' });
+
+  if (/soc.?2|iso.?27001|certif|security|encrypt/.test(t))
+    reqs.push({ question: 'Security certification (SOC 2 / ISO 27001)', category: 'Security & compliance', status: 'covered', answer: 'SOC 2 Type II certified. TLS 1.2 in transit, AES-256 at rest. Full security documentation available on request.', escalate_reason: '' });
+
+  if (/australia|data.residen|sydney|anz/.test(t))
+    reqs.push({ question: 'Australian data residency', category: 'Data residency', status: 'covered', answer: 'Australian data residency on AWS Sydney (ap-southeast-2) is standard — not an add-on.', escalate_reason: '' });
+
+  if (/uk|gdpr|canada|uae|europe/.test(t))
+    reqs.push({ question: 'Non-ANZ data residency requirement', category: 'Data residency', status: 'escalate', answer: '', escalate_reason: 'Non-ANZ data residency (UK, EU, Canada, UAE) requires infrastructure team sign-off before we can commit.' });
+
+  if (/week|implement|go.?live|rollout|timeline/.test(t))
+    reqs.push({ question: 'Implementation timeline requirement', category: 'Implementation', status: 'covered', answer: 'Typical implementation is 4–8 weeks. Multi-site or accelerated timelines available with dedicated onboarding support.', escalate_reason: '' });
+
+  if (/price|pricing|cost|budget|per.?user|licen/.test(t))
+    reqs.push({ question: 'Per-user pricing and volume discounts', category: 'Pricing', status: 'covered', answer: 'Per-user SaaS on annual contracts. Volume discounts for 200+ users. Indicative proposal available within 48 hours.', escalate_reason: '' });
+
+  if (/sla|uptime|99\.9|response.time|p1/.test(t))
+    reqs.push({ question: 'Custom SLA or uptime commitment', category: 'SLA & support', status: 'escalate', answer: '', escalate_reason: 'Non-standard SLA commitments (beyond 99.9% uptime / next-business-day P1) require Head of Product and Legal sign-off.' });
+
+  if (/bespoke|custom.?build|custom.?feature|proprietary/.test(t))
+    reqs.push({ question: 'Bespoke feature development required', category: 'Product capability', status: 'escalate', answer: '', escalate_reason: 'Custom feature development requires product strategy approval — we cannot commit in an RFP response.' });
+
+  if (/reference|case.?stud|customer.?exam/.test(t))
+    reqs.push({ question: 'Industry customer references', category: 'References', status: 'covered', answer: 'Australian mining, construction, and civil references available — case studies and direct contacts on request.', escalate_reason: '' });
+
+  // fallback if nothing matched
+  if (!reqs.length) {
+    reqs.push(
+      { question: 'Mobile field data capture', category: 'Offline & mobile', status: 'covered', answer: 'Full offline mobile capture on iOS and Android via Sitemate App. Auto-sync when connectivity restored.', escalate_reason: '' },
+      { question: 'Configurable forms and workflows', category: 'Product capability', status: 'covered', answer: 'Dashpivot provides a no-code form builder and approval workflow engine — no IT dependency.', escalate_reason: '' },
+      { question: 'System integrations', category: 'Integrations', status: 'covered', answer: 'SAP, Procore, Xero, MYOB, KeyPay, Employment Hero, Aconex supported via Flowsite. Custom API available.', escalate_reason: '' },
+      { question: 'Security and compliance certification', category: 'Security & compliance', status: 'covered', answer: 'SOC 2 Type II. TLS 1.2, AES-256. Australian data residency confirmed.', escalate_reason: '' },
+      { question: 'Implementation and onboarding', category: 'Implementation', status: 'covered', answer: 'Typical 4–8 weeks. No-code self-service configuration. Dedicated CSM for enterprise accounts.', escalate_reason: '' },
+      { question: 'Per-user SaaS pricing', category: 'Pricing', status: 'covered', answer: 'Per-user annual contracts with volume discounts for 200+ users. Indicative proposal available within 48 hours.', escalate_reason: '' }
+    );
+  }
+
+  // Extract company/deadline/budget from text
+  const companyMatch = text.match(/^([A-Z][A-Za-z\s&]+(?:Ltd|Pty|Inc|Corp|Partners|Mining|Civil|Contractors|Group)?)\s*[—–-]/m);
+  const deadlineMatch = text.match(/(?:deadline|response required by|due)[:\s]+([^\n,]+)/i);
+  const budgetMatch   = text.match(/(?:budget)[:\s]+(\$[^\n,]+)/i);
+
+  return {
+    company:  companyMatch  ? companyMatch[1].trim()  : '',
+    deadline: deadlineMatch ? deadlineMatch[1].trim()  : '',
+    budget:   budgetMatch   ? budgetMatch[1].trim()    : '',
+    requirements: reqs
+  };
+}
+
+function buildGenericDraft(reqs) {
+  const covered  = reqs.filter(r => r.status === 'covered');
+  const partial  = reqs.filter(r => r.status === 'partial');
+  const escalate = reqs.filter(r => r.status === 'escalate');
+
+  let md = `## Executive Summary\n\nThank you for the opportunity to respond to your requirements. Sitemate's platform covers the majority of your stated needs — please see our detailed response below.\n\n`;
+
+  if (escalate.length) md += `We are flagging ${escalate.length} item${escalate.length > 1 ? 's' : ''} that require internal sign-off before we can formally commit. We will provide a definitive response on these within 5 business days.\n\n`;
+
+  md += `---\n\n## Requirements Response\n\n`;
+
+  for (const r of covered) {
+    md += `**${r.question}**\n${r.answer}\n\n`;
+  }
+  for (const r of partial) {
+    md += `**${r.question}** *(partial)*\n${r.answer}\n\n`;
+  }
+  for (const r of escalate) {
+    md += `**${r.question}** *(escalate)*\n⚑ ${r.escalate_reason}\n\n`;
+  }
+
+  md += `---\n\n## Next Steps\n\nWe'd welcome the opportunity to walk through these requirements in a live demo. Please reach out to arrange a session.\n\n**Sitemate Team**`;
+  return md;
+}
+
+/* ════════════════════════════════════════════════
+   DETECT WHICH SCENARIO
+════════════════════════════════════════════════ */
+function detectScenario(text) {
+  if (text.includes('Copper Range Mining'))  return 'mining';
+  if (text.includes('Hartwell Civil'))       return 'construction';
+  if (text.includes('Global Infrastructure Partners')) return 'complex';
+  return null;
+}
+
+/* ════════════════════════════════════════════════
+   UTILS
+════════════════════════════════════════════════ */
+function escapeHTML(s) {
+  if (typeof s !== 'string') return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+function safeMD(str) {
+  if (!str) return '';
+  let s = escapeHTML(str);
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  const lines = s.split('\n');
+  let inList = false, out = [];
+  for (const line of lines) {
+    const m = line.match(/^[-•] (.+)/);
+    if (m)  { if (!inList) { out.push('<ul>'); inList = true; } out.push(`<li>${m[1]}</li>`); }
+    else    { if (inList)  { out.push('</ul>'); inList = false; } if (line.trim()) out.push(`<span>${line}</span>`); }
+  }
+  if (inList) out.push('</ul>');
+  return `<div class="answer-text">${out.join('')}</div>`;
+}
+
+function renderMarkdown(md) {
+  let s = escapeHTML(md);
+  s = s.replace(/^## (.+)$/gm,  '<h2>$1</h2>');
+  s = s.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  s = s.replace(/^# (.+)$/gm,   '<h1>$1</h1>');
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*(.+?)\*/g,   '<em>$1</em>');
+  s = s.replace(/^---$/gm, '<hr>');
+  s = s.replace(/((?:^[-*⚑] .+\n?)+)/gm, m => '<ul>' + m.replace(/^[-*⚑] (.+)$/gm, '<li>$1</li>') + '</ul>');
+  s = s.replace(/((?:^\d+\. .+\n?)+)/gm, m => '<ol>' + m.replace(/^\d+\. (.+)$/gm, '<li>$1</li>') + '</ol>');
+  s = s.split(/\n{2,}/).map(p => {
+    const t = p.trim();
+    if (!t || /^<[huo]/.test(t) || t === '<hr>') return t;
+    return `<p>${t}</p>`;
+  }).join('');
+  return s;
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function download(content, filename, mime) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: mime }));
+  a.download = filename; a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════ */
+let el = {};
+let lastResults = [];
+let lastDraft = '';
+let currentScenario = null;
+
+/* ════════════════════════════════════════════════
+   ACCORDION
+════════════════════════════════════════════════ */
+function toggleAcc(btn) {
+  const body = document.getElementById(`acc-body-${btn.dataset.acc}`);
+  const chev = btn.querySelector('.acc-chevron');
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', String(open));
+}
+
+/* ════════════════════════════════════════════════
+   FILE HANDLING
+════════════════════════════════════════════════ */
+function handleFile(file) {
+  if (!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (['csv','txt','md'].includes(ext)) {
+    const r = new FileReader();
+    r.onload = e => { el.rfpInput.value = e.target.result; updateCharCount(); markFilled(file.name); };
+    r.readAsText(file);
+  } else {
+    const r = new FileReader();
+    r.onload = e => {
+      try {
+        const wb = XLSX.read(e.target.result, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        el.rfpInput.value = rows.map(r => r.filter(Boolean).join(' | ')).filter(Boolean).join('\n');
+      } catch { el.rfpInput.value = '(Could not parse file)'; }
+      updateCharCount(); markFilled(file.name);
+    };
+    r.readAsArrayBuffer(file);
+  }
+}
+
+function markFilled(name) {
+  el.dropZone.classList.add('filled');
+  el.dropIcon.textContent = '✓';
+  el.dropLabel.innerHTML = `<span class="drop-filename">${escapeHTML(name)}</span>`;
+  el.dropTypes.style.display = 'none';
+}
+
+function resetDrop() {
+  el.dropZone.classList.remove('filled','over');
+  el.dropIcon.textContent = '↓';
+  el.dropLabel.innerHTML = 'Drop Excel, CSV<br>or text file';
+  el.dropTypes.style.display = '';
+  el.fileInput.value = '';
+}
+
+function updateCharCount() {
+  const n = el.rfpInput.value.length;
+  el.charCount.textContent = `${n.toLocaleString()} chars`;
+  el.charCount.className = 'char-count' + (n > 10000 ? ' warn' : '');
+}
+
+/* ════════════════════════════════════════════════
+   CLEAR
+════════════════════════════════════════════════ */
+function clearAll() {
+  el.rfpInput.value = ''; updateCharCount(); resetDrop();
+  el.output.innerHTML = `<div class="idle"><div class="idle-icon">→</div><div class="idle-text">Paste or drop an RFP, then click Analyse</div><div class="idle-sub">Coverage mapping · draft responses · deal risk signals</div></div>`;
+  el.chips.innerHTML = ''; el.outputActions.style.display = 'none';
+  lastResults = []; lastDraft = ''; currentScenario = null;
+  el.filterTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === 'all'));
+}
+
+/* ════════════════════════════════════════════════
+   SKELETON
+════════════════════════════════════════════════ */
+function showSkeleton() {
+  const card = (w1, w2) => `<div class="skeleton-card"><div class="skeleton-inner"><div class="skeleton-bar" style="width:${w1}%"></div><div class="skeleton-bar" style="width:${w2}%"></div></div></div>`;
+  el.output.innerHTML = `<div class="skeleton-wrap">${card(72,48)}${card(58,38)}${card(84,55)}${card(65,42)}${card(78,44)}</div>`;
+  el.chips.innerHTML = ''; el.outputActions.style.display = 'none';
+}
+
+/* ════════════════════════════════════════════════
+   SCORE CARD
+════════════════════════════════════════════════ */
+function buildScoreCard(reqs) {
+  const total = reqs.length; if (!total) return '';
+  const g = reqs.filter(r => r.status === 'covered').length;
+  const a = reqs.filter(r => r.status === 'partial').length;
+  const r = reqs.filter(r => r.status === 'escalate').length;
+  const score = Math.round(((g + a * 0.5) / total) * 100);
+  const riskLevel = r >= 3 || (r / total) >= 0.35 ? 'high' : r >= 1 ? 'medium' : 'low';
+  const riskIcon  = { high:'⚠', medium:'~', low:'✓' }[riskLevel];
+  const riskText  = { high:'High risk', medium:'Review needed', low:'Low risk' }[riskLevel];
+  const circ = 2 * Math.PI * 22;
+  const offset = circ - (score / 100) * circ;
+  const ringColor = score >= 70 ? 'var(--green)' : score >= 45 ? '#C47D1A' : 'var(--red)';
+  return `<div class="score-card">
+    <div class="score-ring-wrap">
+      <svg class="score-ring" width="56" height="56" viewBox="0 0 56 56">
+        <circle class="score-ring-track" cx="28" cy="28" r="22"/>
+        <circle class="score-ring-fill" cx="28" cy="28" r="22" stroke="${ringColor}" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"/>
+      </svg>
+      <div class="score-ring-text"><div class="score-num">${score}</div><div class="score-pct">%</div></div>
+    </div>
+    <div class="score-bars">
+      <div class="score-bar-row"><div class="score-bar-label">Covered</div><div class="score-bar-track"><div class="score-bar-fill sbar-g" style="width:${(g/total*100).toFixed(1)}%"></div></div><div class="score-bar-n">${g}</div></div>
+      <div class="score-bar-row"><div class="score-bar-label">Partial</div><div class="score-bar-track"><div class="score-bar-fill sbar-a" style="width:${(a/total*100).toFixed(1)}%"></div></div><div class="score-bar-n">${a}</div></div>
+      <div class="score-bar-row"><div class="score-bar-label">Escalate</div><div class="score-bar-track"><div class="score-bar-fill sbar-r" style="width:${(r/total*100).toFixed(1)}%"></div></div><div class="score-bar-n">${r}</div></div>
+    </div>
+    <div class="score-risk ${riskLevel}"><div class="risk-icon">${riskIcon}</div><div class="risk-label">${riskText}</div></div>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════
+   PROCESS (MOCK)
+════════════════════════════════════════════════ */
+async function process() {
+  const text = el.rfpInput.value.trim();
+  if (!text) { alert('Paste an RFP or drop a file first.'); return; }
+
+  el.processBtn.disabled = true;
+  el.processBtn.innerHTML = '<span class="dots">Analysing</span>';
+  showSkeleton();
+
+  await delay(1800); // simulate processing time
+
+  const scenario = detectScenario(text);
+  currentScenario = scenario;
+  const result = scenario ? MOCK_RESULTS[scenario] : buildGenericResult(text);
+  lastResults = result.requirements;
+  lastDraft = '';
+
+  renderResults(result);
+
+  el.processBtn.disabled = false;
+  el.processBtn.textContent = 'Analyse →';
+}
+
+/* ════════════════════════════════════════════════
+   RENDER RESULTS
+════════════════════════════════════════════════ */
+function renderResults(result) {
+  const reqs = result.requirements || [];
+  const g = reqs.filter(r => r.status === 'covered').length;
+  const a = reqs.filter(r => r.status === 'partial').length;
+  const r = reqs.filter(r => r.status === 'escalate').length;
+
+  el.chips.innerHTML = `
+    <div class="chip chip-g">✓ ${g} covered</div>
+    ${a ? `<div class="chip chip-a">~ ${a} partial</div>` : ''}
+    ${r ? `<div class="chip chip-r">⚑ ${r} escalate</div>` : ''}
+  `;
+
+  const metaParts = [];
+  if (result.company)  metaParts.push(`🏢 ${escapeHTML(result.company)}`);
+  if (result.deadline) metaParts.push(`📅 Due ${escapeHTML(result.deadline)}`);
+  if (result.budget)   metaParts.push(`💰 ${escapeHTML(result.budget)}`);
+  const metaHtml = metaParts.length ? `<div class="meta-strip">${metaParts.map(m=>`<span class="meta-chip">${m}</span>`).join('')}</div>` : '';
+
+  const sorted = [...reqs].sort((a,b) => ({escalate:0,partial:1,covered:2}[a.status] - {escalate:0,partial:1,covered:2}[b.status]));
+
+  const cards = sorted.map((req, i) => {
+    const isE = req.status === 'escalate', isP = req.status === 'partial';
+    const sc = isE ? 'stripe-r' : isP ? 'stripe-a' : 'stripe-g';
+    const bc = isE ? 'badge-r'  : isP ? 'badge-a'  : 'badge-g';
+    const bt = isE ? '⚑ escalate' : isP ? '~ partial' : '✓ covered';
+    const hasBody = req.answer || req.escalate_reason;
+    return `<div class="req-card" data-status="${req.status}">
+      <div class="req-head">
+        <div class="status-stripe ${sc}"></div>
+        <div class="req-head-inner">
+          <div>
+            <div class="req-q">${escapeHTML(req.question)}</div>
+            <div class="req-meta">
+              <span class="req-cat">${escapeHTML(req.category)}</span>
+              <span class="req-badge ${bc}">${bt}</span>
+            </div>
+          </div>
+          <button class="copy-btn" data-index="${i}">Copy</button>
+        </div>
+      </div>
+      ${hasBody ? `<div class="req-answer">
+        <div class="answer-label">${isE ? 'Action required' : 'Approved answer'}</div>
+        ${req.answer ? safeMD(req.answer) : ''}
+        ${req.escalate_reason ? `<div class="escalate-row">⚑ ${escapeHTML(req.escalate_reason)}</div>` : ''}
+      </div>` : ''}
+    </div>`;
+  }).join('');
+
+  el.output.innerHTML = metaHtml + buildScoreCard(reqs) + `<div class="req-list">${cards}</div>`;
+  el.outputActions.style.display = '';
+
+  // reset filter
+  el.filterTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === 'all'));
+
+  bindCopyBtns();
+}
+
+/* ════════════════════════════════════════════════
+   FILTER
+════════════════════════════════════════════════ */
+function applyFilter(f) {
+  el.filterTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === f));
+  el.output.querySelectorAll('.req-card').forEach(card => {
+    card.classList.toggle('hidden', f !== 'all' && card.dataset.status !== f);
+  });
+}
+
+/* ════════════════════════════════════════════════
+   COPY BUTTONS
+════════════════════════════════════════════════ */
+function bindCopyBtns() {
+  el.output.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = +btn.dataset.index;
+      const sorted = [...lastResults].sort((a,b) => ({escalate:0,partial:1,covered:2}[a.status]-{escalate:0,partial:1,covered:2}[b.status]));
+      const req = sorted[i]; if (!req) return;
+      const text = [req.question, `Status: ${req.status}`, req.answer && `Answer: ${req.answer}`, req.escalate_reason && `Action: ${req.escalate_reason}`].filter(Boolean).join('\n');
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      }).catch(() => { btn.textContent = 'Failed'; setTimeout(() => btn.textContent = 'Copy', 2000); });
+    });
+  });
+}
+
+/* ════════════════════════════════════════════════
+   EXPORT .MD
+════════════════════════════════════════════════ */
+function exportMD() {
+  if (!lastResults.length) return;
+  const sorted = [...lastResults].sort((a,b) => ({escalate:0,partial:1,covered:2}[a.status]-{escalate:0,partial:1,covered:2}[b.status]));
+  const g = sorted.filter(r=>r.status==='covered').length;
+  const a = sorted.filter(r=>r.status==='partial').length;
+  const r = sorted.filter(r=>r.status==='escalate').length;
+  const lines = ['# RFP Coverage Mapping — Sitemate', `_${new Date().toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'})}_`, '', `**${g} covered · ${a} partial · ${r} escalate**`, '', '---', ''];
+  for (const sec of [{l:'⚑ Escalate',s:'escalate'},{l:'~ Partial',s:'partial'},{l:'✓ Covered',s:'covered'}]) {
+    const items = sorted.filter(r=>r.status===sec.s);
+    if (!items.length) continue;
+    lines.push(`## ${sec.l}`, '');
+    for (const req of items) {
+      lines.push(`### ${req.question}`, `**Category:** ${req.category}`);
+      if (req.answer) lines.push('', req.answer);
+      if (req.escalate_reason) lines.push('', `> **Action required:** ${req.escalate_reason}`);
+      lines.push('');
+    }
+  }
+  download(lines.join('\n'), `rfp-coverage-${Date.now()}.md`, 'text/markdown');
+}
+
+/* ════════════════════════════════════════════════
+   GENERATE DRAFT (MOCK)
+════════════════════════════════════════════════ */
+async function generateDraft() {
+  if (!lastResults.length) return;
+
+  el.draftOverlay.classList.add('open');
+  el.draftBody.innerHTML = `<div class="draft-loading"><div class="draft-spinner"></div><div class="draft-loading-text dots">Generating response</div></div>`;
+  el.draftCopyBtn.style.display = 'none';
+  el.draftExportBtn.style.display = 'none';
+
+  await delay(2000);
+
+  lastDraft = currentScenario ? MOCK_DRAFTS[currentScenario] : buildGenericDraft(lastResults);
+  el.draftBody.innerHTML = `<div class="draft-content">${renderMarkdown(lastDraft)}</div>`;
+  el.draftCopyBtn.style.display = '';
+  el.draftExportBtn.style.display = '';
+}
+
+/* ════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════ */
+function init() {
+  el = {
+    rfpInput:      document.getElementById('rfp-input'),
+    charCount:     document.getElementById('char-count'),
+    processBtn:    document.getElementById('process-btn'),
+    clearBtn:      document.getElementById('clear-btn'),
+    output:        document.getElementById('output'),
+    chips:         document.getElementById('chips'),
+    outputActions: document.getElementById('output-actions'),
+    filterTabs:    document.getElementById('filter-tabs'),
+    exportBtn:     document.getElementById('export-btn'),
+    draftBtn:      document.getElementById('draft-btn'),
+    dropZone:      document.getElementById('drop-zone'),
+    dropIcon:      document.getElementById('drop-icon'),
+    dropLabel:     document.getElementById('drop-label'),
+    dropTypes:     document.getElementById('drop-types'),
+    fileInput:     document.getElementById('file-input'),
+    draftOverlay:  document.getElementById('draft-overlay'),
+    draftClose:    document.getElementById('draft-close'),
+    draftClose2:   document.getElementById('draft-close2'),
+    draftBody:     document.getElementById('draft-body'),
+    draftCopyBtn:  document.getElementById('draft-copy-btn'),
+    draftExportBtn:document.getElementById('draft-export-btn'),
+  };
+
+  document.querySelectorAll('.acc-btn').forEach(b => b.addEventListener('click', () => toggleAcc(b)));
+
+  document.querySelectorAll('.sample-btn').forEach(b => b.addEventListener('click', () => {
+    el.rfpInput.value = SAMPLES[b.dataset.sample] || ''; updateCharCount(); resetDrop();
+  }));
+
+  el.processBtn.addEventListener('click', process);
+  el.clearBtn.addEventListener('click', clearAll);
+  el.exportBtn.addEventListener('click', exportMD);
+  el.draftBtn.addEventListener('click', generateDraft);
+
+  el.rfpInput.addEventListener('input', updateCharCount);
+  el.rfpInput.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); process(); } });
+
+  el.fileInput.addEventListener('change', () => handleFile(el.fileInput.files[0]));
+  el.dropZone.addEventListener('dragover', e => { e.preventDefault(); el.dropZone.classList.add('over'); });
+  el.dropZone.addEventListener('dragleave', () => el.dropZone.classList.remove('over'));
+  el.dropZone.addEventListener('drop', e => { e.preventDefault(); el.dropZone.classList.remove('over'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+  el.filterTabs.querySelectorAll('.filter-tab').forEach(t => t.addEventListener('click', () => applyFilter(t.dataset.filter)));
+
+  el.draftClose.addEventListener('click',  () => el.draftOverlay.classList.remove('open'));
+  el.draftClose2.addEventListener('click', () => el.draftOverlay.classList.remove('open'));
+  el.draftOverlay.addEventListener('click', e => { if (e.target === el.draftOverlay) el.draftOverlay.classList.remove('open'); });
+
+  el.draftCopyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(lastDraft).then(() => {
+      el.draftCopyBtn.textContent = 'Copied!';
+      setTimeout(() => el.draftCopyBtn.textContent = 'Copy to clipboard', 2000);
+    });
+  });
+
+  el.draftExportBtn.addEventListener('click', () => {
+    if (lastDraft) download(lastDraft, `rfp-response-${Date.now()}.md`, 'text/markdown');
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') el.draftOverlay.classList.remove('open'); });
+
+  updateCharCount();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
